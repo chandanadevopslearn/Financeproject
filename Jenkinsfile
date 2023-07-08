@@ -1,17 +1,14 @@
 pipeline{
-    environment{
-        AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
-        AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
-    }
+    
     agent any
     tools{
-        maven 'maven'
-        terraform 'terraform'
+        maven 'mymaven'
+        terraform 'myterraform'
     }
     stages{
         stage('Build maven project'){
             steps{
-               checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/rishi0803/Finance.git']])
+               checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/chandanadevopslearn/Financeproject.git']])
                 sh 'mvn clean install'
             }
         }
@@ -23,18 +20,19 @@ pipeline{
         stage('Build docker image'){
             steps{
                 script{
-                    sh 'docker build -t rishi0803/devops-project .'
+                    sh 'docker build -t mchandana123/devops-project .'
                 }
             }
         }
         stage('push the docker image to hub'){
             steps{
                 script{
-                    withCredentials([string(credentialsId: 'dockerhub-pwd', variable: 'dockerhubpwd')]) {
-                    sh 'docker login -u rishi0803 -p ${dockerhubpwd}'    
+                    withCredentials([string(credentialsId: 'dockerhubpwd', variable: 'dockerpwd')]) {
+        sh 'docker login -u mchandana123 -p ${dockerpwd} '
+    
 }
-                    sh 'docker push rishi0803/devops-project'
-                }
+        sh 'docker push  mchandana123/devops-project '
+    }
                 
             }
             
@@ -53,7 +51,7 @@ pipeline{
         
         stage('Execute Playbook'){
             steps{
-               ansiblePlaybook credentialsId: 'jenkinsAnsible', disableHostKeyChecking: true, installation: 'Ansible', inventory: 'hosts', playbook: 'ansible-playbook.yml'
+               ansiblePlaybook credentialsId: 'ansible', disableHostKeyChecking: true, installation: 'myansible', inventory: 'hosts', playbook: 'ansible-playbook.yml'
             }
         }
     }
