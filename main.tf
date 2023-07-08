@@ -13,8 +13,8 @@ required_version = ">= 1.2.0"
 
 provider "aws" {
   region     = "us-east-2"
-  access_key = "AKIATOHSUWQGNQUGH7VJ"
-  secret_key = "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"
+  access_key = ""
+  secret_key = ""
 }
 
 resource "aws_instance" "my_ec2_instance" {
